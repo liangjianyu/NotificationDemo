@@ -1,0 +1,194 @@
+package com.allens.notifacationdemo;
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.provider.MediaStore;
+import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+
+/**
+ * @author allens
+ */
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        findViewById(R.id.btn_base).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                baseNotify();
+            }
+        });
+
+        findViewById(R.id.btn_Action).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                action();
+            }
+        });
+
+        findViewById(R.id.btn_notify_create).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNotify();
+            }
+        });
+        findViewById(R.id.btn_notify_update).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateNotify();
+            }
+        });
+        findViewById(R.id.btn_Default).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                init_default();
+            }
+        });
+        findViewById(R.id.btn_sound).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                init_sound();
+            }
+        });
+        findViewById(R.id.btn_vibration).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                init_vibration();
+            }
+        });
+        findViewById(R.id.btn_lights).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                init_ligths();
+            }
+        });
+    }
+
+    private void init_ligths() {
+        final NotificationManager notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("我是带有呼吸灯效果的通知")
+                .setContentText("一闪一闪亮晶晶~")
+                //ledARGB 表示灯光颜色、 ledOnMS 亮持续时间、ledOffMS 暗的时间
+                .setLights(0xFF0000, 3000, 3000);
+        Notification notify = builder.build();
+        //只有在设置了标志符Flags为Notification.FLAG_SHOW_LIGHTS的时候，才支持呼吸灯提醒。
+        notify.flags = Notification.FLAG_SHOW_LIGHTS;
+        //使用handler延迟发送通知,因为连接usb时,呼吸灯一直会亮着
+        notifyManager.notify(4, builder.build());
+    }
+
+    private void init_vibration() {
+        NotificationManager notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        long[] vibrate = new long[]{0, 500, 1000, 1500};
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("我是伴有震动效果的通知")
+                .setContentText("颤抖吧,凡人~")
+                .setVibrate(vibrate);
+        if (notifyManager != null) {
+            notifyManager.notify(3, builder.build());
+        }
+    }
+
+    private void init_sound() {
+        NotificationManager notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("我是伴有铃声效果的通知")
+                .setContentText("美妙么?安静听~")
+                //调用自己提供的铃声，位于 /res/values/raw 目录下
+                .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notice));
+        if (notifyManager != null) {
+            notifyManager.notify(2, builder.build());
+        }
+    }
+
+    private void init_default() {
+        NotificationManager notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("通知效果")
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setContentText("自己设置 ");
+        if (notifyManager != null) {
+            notifyManager.notify(5, builder.build());
+        }
+    }
+
+    private void updateNotify() {
+        NotificationManager notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("这是更新过的")
+                .setContentText("因为具有相同的ID ");
+        if (notifyManager != null) {
+            notifyManager.notify(4, builder.build());
+        }
+    }
+
+    private void createNotify() {
+        NotificationManager notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("这是初始化的")
+                .setContentText("现在点击发送相同ID 的按钮");
+        if (notifyManager != null) {
+            notifyManager.notify(4, builder.build());
+        }
+    }
+
+
+    /**
+     * 发送一个点击跳转到MainActivity的消息
+     */
+    private void action() {
+        //获取NotificationManager实例
+        NotificationManager notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        //获取PendingIntent
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        PendingIntent mainPendingIntent = PendingIntent.getActivity(this, 0, mainIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        //创建 Notification.Builder 对象
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                //点击通知后自动清除
+                .setAutoCancel(true)
+                .setContentTitle("我是带Action的Notification")
+                .setContentText("点我会打开MainActivity")
+                .setContentIntent(mainPendingIntent);
+        //发送通知
+        notifyManager.notify(2, builder.build());
+    }
+
+
+    private void baseNotify() {
+        //获取NotificationManager实例
+        NotificationManager notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        //实例化NotificationCompat.Builder并设置相关属性
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this)
+                //设置小图标
+                .setSmallIcon(R.mipmap.ic_launcher)
+                //设置通知标题
+                .setContentTitle("最简单的Notification")
+                //设置通知内容
+                .setContentText("只有小图标、标题、内容");
+        //通过builder.build()方法生成Notification对象,并发送通知,id=1
+        if (notifyManager != null) {
+            notifyManager.notify(1, builder.build());
+        }
+    }
+
+}

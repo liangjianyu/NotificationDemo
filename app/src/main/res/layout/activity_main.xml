@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.allens.notifacationdemo.MainActivity">
+
+
+    <Button
+        android:id="@+id/btn_base"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="基础的notification" />
+
+    <Button
+        android:id="@+id/btn_Action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="添加Action" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_notify_create"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="先添加一个通知" />
+
+        <Button
+            android:id="@+id/btn_notify_update"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="发送相同ID的通知" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_Default"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Notification 的通知效果" />
+    <Button
+        android:id="@+id/btn_sound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Notification 铃声" />
+    <Button
+        android:id="@+id/btn_vibration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Notification 震动" />
+    <Button
+        android:id="@+id/btn_lights"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Notification 呼吸灯" />
+</LinearLayout>
